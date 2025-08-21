@@ -38,38 +38,39 @@ Rules:
 - Each file’s content MUST end with a newline. Readers MUST behave as if a trailing \n is present. Writers SHOULD include it.
 - Readers MUST accept \n and \r\n; delivered content uses \n.
 
-7. Collisions
+## 7. Collisions
 - A line starting with <DELIM><SP> is always interpreted as a file declaration.
 - Writers MUST choose a delimiter such that no content line begins with <DELIM><SP>.
 - If a collision would occur, writers MUST choose a different delimiter.
 
-8. Ignored lines
+## 8. Ignored lines
 - Blank or whitespace-only lines outside any section are ignored.
 - Blank lines inside a section are preserved.
 
-9. Directories
+## 9. Directories
 - Directories are implicit. Implementations MUST create intermediate directories as needed for each <PATH>.
 
-10. Media type and extension
+## 10. Media type and extension
 - Suggested media type: application/vnd.silo.tree
 - Suggested extension: .silo
 
-11. Security considerations
+## 11. Security considerations
 - Reject absolute paths, .., and drive letters.
 - Impose limits (file count, path length, file size).
 - Write atomically with safe permissions.
 
-12. Errors
+## 12. Errors
 
 Implementations MUST error on:
 - Inconsistent delimiter string.
 - Duplicate <PATH>.
 - Disallowed <PATH> (absolute, .., empty, or .).
 
-13. ABNF (informative)
+## 13. ABNF (informative)
 
-ABNF cannot enforce “same delimiter string” globally and is limited for Unicode classes; prose above is normative.
+ABNF cannot enforce "same delimiter string" globally and is limited for Unicode classes; prose above is normative.
 
+```abnf
 silo            = *blank-line *(section *blank-line)
 section         = file-decl *content-line
 file-decl       = delim SP path-chars EOL
@@ -86,9 +87,11 @@ SP              = %x20
 EOL             = %x0A / (%x0D %x0A)
 VCHAR           = %x21-7E
 WSP             = %x20 / %x09
+```
 
-14. Reference parsing algorithm (normative)
+## 14. Reference parsing algorithm (normative)
 
+```
 normalize EOL to "\n"; read UTF-8
 skip leading blank/whitespace-only lines
 read first non-blank line L
@@ -104,12 +107,13 @@ for each subsequent line:
      append line to current file content verbatim
 on close of a section, ensure content ends with "\n"
 validate paths and duplicates
+```
 
-15. Writer guidelines
+## 15. Writer guidelines
 - Prefer a short delimiter like > or 🌾. If any content would start with <DELIM><SP>, switch to another sequence (e.g., ===, ***, ->, ❖❖).
 - End the container file with \n.
 
-16. Example
+## 16. Example
 
 Using 🌾 to demonstrate a non-ASCII delimiter:
 
@@ -130,6 +134,6 @@ Yields three files:
 - hi.py with content: `from src.util import a\nprint(a)\n`
 - config/settings.json with content: `{ "debug": true }`
 
-17. Conformance
+## 17. Conformance
 
 A "Silo reader" MUST implement Sections 4–12. A "Silo writer" MUST implement Sections 4–8 and SHOULD follow Section 15.
