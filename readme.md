@@ -1,4 +1,4 @@
-<Tortise File Format Specification v0.2
+# Silo File Format Specification v0.2
 
 ## 1. Purpose
 
@@ -10,10 +10,10 @@ Key words MUST, SHOULD, MAY are per RFC 2119/8174.
 
 ## 3. Overview
 
-A Tortise file is a sequence of file sections. Each section starts with a file declaration line, followed by the file’s content lines. A fixed delimiter string identifies declaration lines. Blank lines outside sections are ignored.
+A Silo file is a sequence of file sections. Each section starts with a file declaration line, followed by the file’s content lines. A fixed delimiter string identifies declaration lines. Blank lines outside sections are ignored.
 
 ## 4. Delimiter
-- The delimiter MUST be a non-empty sequence of one or more Unicode characters that are not ASCII space (0x20), horizontal tab (0x09), line feed (0x0A), or carriage return (0x0D). Emoji and symbols are allowed (e.g., 🐢, ❖❖❖, ::, ===, ***).
+- The delimiter MUST be a non-empty sequence of one or more Unicode characters that are not ASCII space (0x20), horizontal tab (0x09), line feed (0x0A), or carriage return (0x0D). Emoji and symbols are allowed (e.g., 🌾, ❖❖❖, ::, ===, ***).
 - The delimiter is auto-detected from the first non-blank line, which MUST be a valid file declaration.
 - All declarations in the file MUST use the exact same delimiter string. Matching is byte-exact in UTF-8.
 - Writers MUST choose a delimiter such that no content line in the file begins with <DELIM><SP>. If a collision would occur, choose a different delimiter.
@@ -51,8 +51,8 @@ Rules:
 - Directories are implicit. Implementations MUST create intermediate directories as needed for each <PATH>.
 
 10. Media type and extension
-- Suggested media type: application/vnd.tortise.tree
-- Suggested extension: .tortise
+- Suggested media type: application/vnd.silo.tree
+- Suggested extension: .silo
 
 11. Security considerations
 - Reject absolute paths, .., and drive letters.
@@ -70,7 +70,7 @@ Implementations MUST error on:
 
 ABNF cannot enforce “same delimiter string” globally and is limited for Unicode classes; prose above is normative.
 
-tortise         = *blank-line *(section *blank-line)
+silo            = *blank-line *(section *blank-line)
 section         = file-decl *content-line
 file-decl       = delim SP path-chars EOL
 delim           = 1*delim-char  ; any non-whitespace Unicode scalar value
@@ -106,22 +106,22 @@ on close of a section, ensure content ends with "\n"
 validate paths and duplicates
 
 15. Writer guidelines
-- Prefer a short delimiter like > or 🐢. If any content would start with <DELIM><SP>, switch to another sequence (e.g., ===, ***, ->, ❖❖).
+- Prefer a short delimiter like > or 🌾. If any content would start with <DELIM><SP>, switch to another sequence (e.g., ===, ***, ->, ❖❖).
 - End the container file with \n.
 
 16. Example
 
-Using 🐢 to demonstrate a non-ASCII delimiter:
+Using 🌾 to demonstrate a non-ASCII delimiter:
 
-``` tortise
-🐢 src/util.py
+``` silo
+🌾 src/util.py
 a = 1
 
-🐢 hi.py
+🌾 hi.py
 from src.util import a
 print(a)
 
-🐢 config/settings.json
+🌾 config/settings.json
 { "debug": true }
 ```
 
@@ -132,4 +132,4 @@ Yields three files:
 
 17. Conformance
 
-A “Tortise reader” MUST implement Sections 4–12. A “Tortise writer” MUST implement Sections 4–8 and SHOULD follow Section 15.
+A "Silo reader" MUST implement Sections 4–12. A "Silo writer" MUST implement Sections 4–8 and SHOULD follow Section 15.
